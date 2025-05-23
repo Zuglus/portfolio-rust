@@ -1,0 +1,13 @@
+[build]
+# Директория для сборки
+dist = "dist"
+# Публичный URL для ассетов
+public_url = "/"
+# Минификация при релизной сборке
+minify = "on_release"
+
+[[hooks]]
+# Компиляция TailwindCSS перед сборкой
+stage = "pre_build"
+command = "sh"
+command_arguments = ["-c", "npx tailwindcss -i ./style/main.scss -o ./style/output.css"]

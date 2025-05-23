@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Временные заглушки для шрифтов - будут заменены на этапе 4 */
+@font-face {
+  font-family: 'MV-SKIFER';
+  src: local('Arial Black');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Onest';
+  src: local('Arial');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+:root {
+  font-size: clamp(4.27px, calc(100vw / 75), 16px);
+}
+
+html {
+  overscroll-behavior: contain;
+  background-color: #04061B;
+}
+
+/* Сохраняем стили из оригинального проекта */
+.modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #3624A6 transparent;
+}
+
+.modal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-track {
+  background: #3624A6;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  background: #4A5568;
+  border-radius: 4px;
+}
+
+.object-cover {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: static;
+}
