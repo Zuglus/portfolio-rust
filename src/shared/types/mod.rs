@@ -1,13 +1,13 @@
 pub type Id = String;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct PortfolioItem {
     pub id: Id,
     pub image: String,
     pub alt: String,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Experience {
     pub year: String,
     pub company: String,
@@ -16,7 +16,7 @@ pub struct Experience {
     pub circle_image: Option<String>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Project {
     pub id: Id,
     pub title: String,
@@ -25,7 +25,7 @@ pub struct Project {
     pub slides: Vec<Slide>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Slide {
     pub image: String,
     pub task: Option<String>,

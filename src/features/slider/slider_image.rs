@@ -6,36 +6,43 @@ pub fn SliderImage(
     alt: String,
     priority: bool,
 ) -> impl IntoView {
-    let (loading, set_loading) = create_signal(true);
-    let (error, set_error) = create_signal(false);
+    let (image_state, set_image_state) = create_signal("loading".to_string());
+    let src_clone = src.clone(); // Создаем клон для использования в closure
     
     view! {
-        <div class="relative w-full">
+        <div class="relative w-full min-h-[400px] flex items-center justify-center bg-white/2 rounded-lg">
+            // Индикатор загрузки
             {move || {
-                if loading.get() && !error.get() {
-                    view! {
-                        <div class="flex items-center justify-center h-96 bg-white/5 rounded-lg">
-                            <div class="text-white/60">"Загрузка..."</div>
+                let src_for_display = src_clone.clone(); // Клон для отображения в ошибке
+                match image_state.get().as_str() {
+                    "loading" => view! {
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-white/60 text-xl animate-pulse">"Загрузка..."</div>
                         </div>
-                    }.into_view()
-                } else if error.get() {
-                    view! {
-                        <div class="flex items-center justify-center h-96 bg-red-500/10 rounded-lg text-red-500">
-                            "Ошибка загрузки изображения"
+                    }.into_view(),
+                    "error" => view! {
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-red-500/10 rounded-lg text-red-400">
+                            <div class="text-lg mb-2">"❌ Изображение не найдено"</div>
+                            <div class="text-sm opacity-70 px-4 text-center break-all">{src_for_display}</div>
                         </div>
-                    }.into_view()
-                } else {
-                    view! { <div/> }.into_view()
+                    }.into_view(),
+                    _ => view! { <div/> }.into_view()
                 }
             }}
             
+            // Изображение
             <img
-                src=src.clone()
+                src=src
                 alt=alt
-                class="w-full object-contain"
-                style=if loading.get() { "display: none" } else { "" }
-                on:load=move |_| set_loading.set(false)
-                on:error=move |_| { set_loading.set(false); set_error.set(true); }
+                class="w-full h-auto object-contain max-h-[70vh] rounded-lg"
+                style=move || {
+                    match image_state.get().as_str() {
+                        "loaded" => "display: block;",
+                        _ => "display: none;"
+                    }
+                }
+                on:load=move |_| set_image_state.set("loaded".to_string())
+                on:error=move |_| set_image_state.set("error".to_string())
                 loading=if priority { "eager" } else { "lazy" }
             />
         </div>

@@ -1,15 +1,24 @@
 use leptos::*;
 use web_sys::KeyboardEvent;
 use crate::features::slider::{SliderImage, NavigationButtons};
-use crate::shared::types::{Slide, Project};
+use crate::shared::types::Project;
 
 #[component]
 pub fn Slider(project: Project) -> impl IntoView {
-    let slides = project.slides;
-    let total_slides = slides.len();
+    let slides = create_memo(move |_| project.slides.clone());
+    let total_slides = slides.get().len();
     
     let (current_index, set_current_index) = create_signal(0);
     let (is_loading, set_is_loading) = create_signal(false);
+    
+    // Логирование для отладки
+    create_effect(move |_| {
+        let slides_vec = slides.get();
+        let idx = current_index.get();
+        if let Some(slide) = slides_vec.get(idx) {
+            web_sys::console::log_1(&format!("Текущий слайд {}: {}", idx, slide.image).into());
+        }
+    });
     
     // Навигация по слайдам
     let navigate = move |direction: String| {
@@ -51,14 +60,15 @@ pub fn Slider(project: Project) -> impl IntoView {
     view! {
         <div class="slider w-full max-w-[93.75rem] mx-auto overflow-hidden group relative">
             {move || {
+                let slides_vec = slides.get();
                 let idx = current_index.get();
-                if let Some(slide) = slides.get(idx) {
+                if let Some(slide) = slides_vec.get(idx) {
                     view! {
                         <div class="relative w-full">
-                            <div class="overflow-hidden">
+                            <div class="overflow-hidden mb-4">
                                 <SliderImage
                                     src=slide.image.clone()
-                                    alt="Слайд проекта".to_string()
+                                    alt=format!("Слайд {} проекта {}", idx + 1, project.title)
                                     priority=true
                                 />
                             </div>
@@ -68,6 +78,11 @@ pub fn Slider(project: Project) -> impl IntoView {
                                     on_navigate=Callback::new(navigate)
                                     disabled=is_loading.get()
                                 />
+                                
+                                // Показываем номер слайда
+                                <div class="text-center mb-4 text-white/60">
+                                    {format!("{} из {}", idx + 1, total_slides)}
+                                </div>
 
                                 <div class="font-onest text-[3.28125rem] md:text-[1.25rem] space-y-4">
                                     {slide.task.as_ref().map(|task| view! {
