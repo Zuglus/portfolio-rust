@@ -6,18 +6,15 @@ use crate::shared::types::Project;
 #[derive(Clone, Copy, PartialEq)]
 enum SlideDirection {
     None,
-    Next,
-    Previous,
+    Forward,
+    Backward,
 }
 
 #[derive(Clone, Copy, PartialEq)]
-enum SlideState {
-    Active,
-    ExitLeft,
-    ExitRight,
-    EnterLeft,
-    EnterRight,
-    Hidden,
+enum SliderState {
+    Idle,
+    Transitioning,
+    Loading,
 }
 
 #[component]
@@ -26,128 +23,81 @@ pub fn Slider(project: Project) -> impl IntoView {
     let total_slides = slides.get().len();
     
     let (current_index, set_current_index) = create_signal(0);
-    let (previous_index, set_previous_index) = create_signal(0);
-    let (is_transitioning, set_is_transitioning) = create_signal(false);
-    let (direction, set_direction) = create_signal(SlideDirection::None);
+    let (slider_state, set_slider_state) = create_signal(SliderState::Idle);
+    let (slide_direction, set_slide_direction) = create_signal(SlideDirection::None);
     let (content_visible, set_content_visible) = create_signal(true);
     
-    // Логирование для отладки
+    // Prefetch next/previous images for smooth experience
     create_effect(move |_| {
+        let current = current_index.get();
         let slides_vec = slides.get();
-        let idx = current_index.get();
-        if let Some(slide) = slides_vec.get(idx) {
-            web_sys::console::log_1(&format!("Анимированный слайд {}: {}", idx, slide.image).into());
+        
+        // Preload adjacent slides
+        if let Some(next_slide) = slides_vec.get((current + 1) % total_slides) {
+            let _ = web_sys::window()
+                .unwrap()
+                .document()
+                .unwrap()
+                .create_element("link")
+                .unwrap()
+                .set_attribute("rel", "prefetch")
+                .unwrap();
         }
     });
     
-    // Навигация по слайдам с анимацией
-    let navigate = move |nav_direction: String| {
-        if is_transitioning.get() { return; }
+    // Modern navigation with timing based on Material Design
+    let navigate = move |direction: String| {
+        if slider_state.get() != SliderState::Idle { return; }
         
         let current = current_index.get();
-        let (new_index, slide_direction) = match nav_direction.as_str() {
+        let (new_index, nav_direction) = match direction.as_str() {
             "next" => {
                 let next = if current < total_slides - 1 { current + 1 } else { 0 };
-                (next, SlideDirection::Next)
+                (next, SlideDirection::Forward)
             },
             "prev" => {
                 let prev = if current > 0 { current - 1 } else { total_slides - 1 };
-                (prev, SlideDirection::Previous)
+                (prev, SlideDirection::Backward)
             },
             _ => return,
         };
         
         if new_index == current { return; }
         
-        // Начинаем переход
-        set_is_transitioning.set(true);
-        set_direction.set(slide_direction);
-        set_previous_index.set(current);
+        // Start transition sequence
+        set_slider_state.set(SliderState::Transitioning);
+        set_slide_direction.set(nav_direction);
         
-        // Скрываем контент
+        // Phase 1: Hide content (150ms)
         set_content_visible.set(false);
         
-        // Через небольшую задержку меняем индекс
+        // Phase 2: Change slide (50ms delay)
         set_timeout(
             move || {
                 set_current_index.set(new_index);
                 
-                // Показываем новый контент
-                set_timeout(
-                    move || set_content_visible.set(true),
-                    std::time::Duration::from_millis(200)
-                );
-                
-                // Завершаем переход
+                // Phase 3: Show new content (200ms delay)
                 set_timeout(
                     move || {
-                        set_is_transitioning.set(false);
-                        set_direction.set(SlideDirection::None);
+                        set_content_visible.set(true);
+                        
+                        // Phase 4: Complete transition (300ms delay)
+                        set_timeout(
+                            move || {
+                                set_slider_state.set(SliderState::Idle);
+                                set_slide_direction.set(SlideDirection::None);
+                            },
+                            std::time::Duration::from_millis(250)
+                        );
                     },
-                    std::time::Duration::from_millis(500)
+                    std::time::Duration::from_millis(100)
                 );
             },
-            std::time::Duration::from_millis(100)
+            std::time::Duration::from_millis(150)
         );
     };
     
-    // Определяем состояние слайда
-    let get_slide_state = move |index: usize| -> SlideState {
-        let current = current_index.get();
-        let previous = previous_index.get();
-        let dir = direction.get();
-        let transitioning = is_transitioning.get();
-        
-        if !transitioning {
-            if index == current {
-                return SlideState::Active;
-            } else {
-                return SlideState::Hidden;
-            }
-        }
-        
-        match dir {
-            SlideDirection::Next => {
-                if index == current {
-                    SlideState::EnterRight
-                } else if index == previous {
-                    SlideState::ExitLeft
-                } else {
-                    SlideState::Hidden
-                }
-            },
-            SlideDirection::Previous => {
-                if index == current {
-                    SlideState::EnterLeft
-                } else if index == previous {
-                    SlideState::ExitRight
-                } else {
-                    SlideState::Hidden
-                }
-            },
-            SlideDirection::None => {
-                if index == current {
-                    SlideState::Active
-                } else {
-                    SlideState::Hidden
-                }
-            }
-        }
-    };
-    
-    // Получаем CSS класс для состояния слайда
-    let get_slide_class = move |state: SlideState| -> &'static str {
-        match state {
-            SlideState::Active => "slide slide-active",
-            SlideState::ExitLeft => "slide slide-exit-left",
-            SlideState::ExitRight => "slide slide-exit-right", 
-            SlideState::EnterLeft => "slide slide-enter-left",
-            SlideState::EnterRight => "slide slide-enter-right",
-            SlideState::Hidden => "slide",
-        }
-    };
-    
-    // Обработчик клавиш
+    // Keyboard navigation
     let handle_keydown = move |e: KeyboardEvent| {
         match e.key().as_str() {
             "ArrowRight" => navigate("next".to_string()),
@@ -156,82 +106,84 @@ pub fn Slider(project: Project) -> impl IntoView {
         }
     };
     
-    // Добавляем слушатель клавиш
     create_effect(move |_| {
         let listener = window_event_listener(ev::keydown, handle_keydown);
         on_cleanup(move || drop(listener));
     });
     
     view! {
-        <div class="slider w-full max-w-[93.75rem] mx-auto overflow-hidden group relative">
-            <div class="slider-container relative min-h-[400px]">
+        <div class="w-full max-w-[93.75rem] mx-auto">
+            // Modern slide viewport
+            <div class="slide-viewport relative min-h-[400px] mb-6">
                 {move || {
                     let slides_vec = slides.get();
-                    slides_vec.into_iter().enumerate().map(|(index, slide)| {
-                        // Исправляем проблему с ownership - создаем state один раз и используем Copy
-                        let slide_state = get_slide_state(index);
-                        let class = get_slide_class(slide_state);
-                        let is_visible = slide_state != SlideState::Hidden;
-                        
+                    let idx = current_index.get();
+                    
+                    if let Some(slide) = slides_vec.get(idx) {
                         view! {
-                            <div class=class style=move || {
-                                if !is_visible {
-                                    "display: none;"
-                                } else {
-                                    ""
-                                }
-                            }>
-                                <div class="overflow-hidden mb-4">
+                            <div class="slide-item entered">
+                                <div class="image-container overflow-hidden rounded-lg">
                                     <SliderImage
                                         src=slide.image.clone()
-                                        alt=format!("Слайд {} проекта {}", index + 1, project.title)
-                                        priority={index == 0}
+                                        alt=format!("Слайд {} проекта {}", idx + 1, project.title)
+                                        priority={idx == 0}
                                     />
                                 </div>
                             </div>
-                        }
-                    }).collect_view()
+                        }.into_view()
+                    } else {
+                        view! {
+                            <div class="slide-item entered">
+                                <div class="skeleton w-full h-[400px] flex items-center justify-center">
+                                    <div class="loading-spinner"></div>
+                                </div>
+                            </div>
+                        }.into_view()
+                    }
                 }}
             </div>
             
+            // Modern navigation with state layer
             <div class="px-8 pb-8">
                 <NavigationButtons 
                     on_navigate=Callback::new(navigate)
-                    disabled=is_transitioning.get()
+                    disabled={slider_state.get() != SliderState::Idle}
                 />
 
+                // Content with staggered animation
                 <div class=move || {
                     if content_visible.get() {
-                        "font-onest text-[3.28125rem] md:text-[1.25rem] space-y-4 slide-content"
+                        "slide-content space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     } else {
-                        "font-onest text-[3.28125rem] md:text-[1.25rem] space-y-4 slide-content slide-content-hidden"
+                        "slide-content slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     }
                 }>
                     {move || {
                         let slides_vec = slides.get();
                         let idx = current_index.get();
+                        
                         if let Some(slide) = slides_vec.get(idx) {
                             view! {
-                                <>
+                                <div class="space-y-4">
                                     {slide.task.as_ref().map(|task| view! {
-                                        <p>
+                                        <p class="animate-slide-up">
                                             <span class="font-semibold">"Задача: "</span>
                                             <span class="opacity-80">{task}</span>
                                         </p>
                                     })}
                                     
                                     {slide.solution.as_ref().map(|solution| view! {
-                                        <p>
+                                        <p class="animate-slide-up" style="animation-delay: 50ms">
                                             <span class="font-semibold">"Решение: "</span>
                                             <span class="opacity-80">{solution}</span>
                                         </p>
                                     })}
-                                </>
+                                </div>
                             }.into_view()
                         } else {
                             view! {
-                                <div class="text-white/60 text-center py-4">
-                                    "Нет содержимого для отображения"
+                                <div class="text-center py-8 text-white/60">
+                                    "Содержимое недоступно"
                                 </div>
                             }.into_view()
                         }

@@ -14,93 +14,58 @@ module.exports = {
         primary: '#04061B',
         secondary: '#3624A6',
       },
+      /* Modern Animation System */
+      transitionDuration: {
+        'short1': '50ms',
+        'short2': '100ms',
+        'short3': '150ms',
+        'short4': '200ms',
+        'medium1': '250ms',
+        'medium2': '300ms',
+        'medium3': '350ms',
+        'medium4': '400ms',
+        'long1': '450ms',
+        'long2': '500ms',
+        'long3': '550ms',
+        'long4': '600ms',
+      },
+      transitionTimingFunction: {
+        'standard': 'cubic-bezier(0.2, 0.0, 0, 1)',
+        'emphasized': 'cubic-bezier(0.05, 0.7, 0.1, 1)',
+        'emphasized-decelerate': 'cubic-bezier(0.3, 0.0, 0.8, 0.15)',
+        'emphasized-accelerate': 'cubic-bezier(0.3, 0.0, 0.8, 0.15)',
+        'legacy': 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+      },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
         'pulse-slow': 'pulse 3s ease-in-out infinite',
-        'modal-backdrop-enter': 'modal-backdrop-enter 0.3s ease-out forwards',
-        'modal-backdrop-exit': 'modal-backdrop-exit 0.2s ease-in forwards',
-        'modal-content-enter': 'modal-content-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-        'modal-content-exit': 'modal-content-exit 0.2s ease-in forwards',
-        'skeleton-shimmer': 'skeleton-shimmer 1.5s infinite',
-        'loading-pulse': 'loading-pulse 2s ease-in-out infinite',
-        'fade-in': 'fadeIn 0.3s ease-out forwards',
-        'fade-out': 'fadeOut 0.2s ease-in forwards',
+        'shimmer': 'shimmer 2s infinite cubic-bezier(0.2, 0.0, 0, 1)',
+        'fade-in': 'fadeIn 300ms cubic-bezier(0.2, 0.0, 0, 1)',
+        'slide-up': 'slideUp 300ms cubic-bezier(0.05, 0.7, 0.1, 1)',
+        'slide-down': 'slideDown 300ms cubic-bezier(0.05, 0.7, 0.1, 1)',
+        'scale-in': 'scaleIn 250ms cubic-bezier(0.05, 0.7, 0.1, 1)',
       },
       keyframes: {
-        'modal-backdrop-enter': {
-          'from': {
-            opacity: '0',
-            'backdrop-filter': 'blur(0px)',
-          },
-          'to': {
-            opacity: '1',
-            'backdrop-filter': 'blur(8px)',
-          },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
         },
-        'modal-backdrop-exit': {
-          'from': {
-            opacity: '1',
-            'backdrop-filter': 'blur(8px)',
-          },
-          'to': {
-            opacity: '0',
-            'backdrop-filter': 'blur(0px)',
-          },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
-        'modal-content-enter': {
-          'from': {
-            opacity: '0',
-            transform: 'scale(0.9) translateY(20px)',
-          },
-          'to': {
-            opacity: '1',
-            transform: 'scale(1) translateY(0)',
-          },
+        slideUp: {
+          '0%': { transform: 'translateY(12px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
-        'modal-content-exit': {
-          'from': {
-            opacity: '1',
-            transform: 'scale(1) translateY(0)',
-          },
-          'to': {
-            opacity: '0',
-            transform: 'scale(0.95) translateY(-10px)',
-          },
+        slideDown: {
+          '0%': { transform: 'translateY(-12px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
-        'skeleton-shimmer': {
-          '0%': {
-            'background-position': '-200px 0',
-          },
-          '100%': {
-            'background-position': 'calc(200px + 100%) 0',
-          },
+        scaleIn: {
+          '0%': { transform: 'scale(0.94)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
-        'loading-pulse': {
-          '0%, 100%': {
-            opacity: '0.4',
-            transform: 'scale(1)',
-          },
-          '50%': {
-            opacity: '0.8',
-            transform: 'scale(1.02)',
-          },
-        },
-        'fadeIn': {
-          'from': { opacity: '0' },
-          'to': { opacity: '1' },
-        },
-        'fadeOut': {
-          'from': { opacity: '1' },
-          'to': { opacity: '0' },
-        },
-      },
-      transitionTimingFunction: {
-        'modal': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'slide': 'cubic-bezier(0.4, 0, 0.2, 1)',
-      },
-      transitionDuration: {
-        '400': '400ms',
-        '600': '600ms',
       },
     },
   },
