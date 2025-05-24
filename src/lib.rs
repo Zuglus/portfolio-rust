@@ -1,2 +1,4 @@
-// Экспортируем модуль app для использования в main.rs
 pub mod app;
+pub mod pages;
+pub mod widgets;
+pub mod shared;
