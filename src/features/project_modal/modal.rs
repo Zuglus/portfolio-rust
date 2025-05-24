@@ -2,6 +2,7 @@ use leptos::*;
 use leptos::html::Div;
 use web_sys::KeyboardEvent;
 use crate::features::project_modal::ModalHeader;
+use crate::features::slider::Slider;
 use crate::shared::types::Project;
 
 #[component]
@@ -11,7 +12,7 @@ pub fn ProjectModal(
 ) -> impl IntoView {
     let modal_ref = create_node_ref::<Div>();
     
-    // Обработчик клавиш
+    // Обработчик клавиш (только ESC для закрытия)
     let handle_keydown = move |e: KeyboardEvent| {
         if e.key() == "Escape" {
             on_close.set(None);
@@ -50,33 +51,7 @@ pub fn ProjectModal(
                 <div class="h-[90vh] overflow-y-auto modal-scrollbar">
                     <div class="p-[3.75rem] md:p-[2.5rem]">
                         <ModalHeader project=project.clone() />
-                        
-                        // Показываем первый слайд
-                        {project.slides.first().map(|slide| view! {
-                            <div class="w-full">
-                                <img 
-                                    src=&slide.image
-                                    alt="Слайд проекта"
-                                    class="w-full object-contain"
-                                />
-                                
-                                <div class="mt-6 font-onest text-[3.28125rem] md:text-[1.25rem] space-y-4">
-                                    {slide.task.as_ref().map(|task| view! {
-                                        <p>
-                                            <span class="font-semibold">"Задача: "</span>
-                                            <span class="opacity-80">{task}</span>
-                                        </p>
-                                    })}
-                                    
-                                    {slide.solution.as_ref().map(|solution| view! {
-                                        <p>
-                                            <span class="font-semibold">"Решение: "</span>
-                                            <span class="opacity-80">{solution}</span>
-                                        </p>
-                                    })}
-                                </div>
-                            </div>
-                        })}
+                        <Slider project />
                     </div>
                 </div>
 
