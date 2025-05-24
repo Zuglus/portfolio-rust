@@ -3,7 +3,9 @@ use crate::entities::project_card::ProjectCard;
 use crate::shared::data::get_portfolio_data;
 
 #[component]
-pub fn PortfolioSection() -> impl IntoView {
+pub fn PortfolioSection(
+    on_card_click: Callback<String>,
+) -> impl IntoView {
     let portfolio_data = get_portfolio_data();
     
     view! {
@@ -22,8 +24,11 @@ pub fn PortfolioSection() -> impl IntoView {
             </div>
 
             <div class="relative z-10 gap-[2.71875rem] md:gap-[1.8125rem] grid grid-cols-1 md:grid-cols-2 mx-auto max-w-[70.65625rem] md:max-w-full">
-                {portfolio_data.into_iter().map(|item| view! {
-                    <ProjectCard item />
+                {portfolio_data.into_iter().map(|item| {
+                    let on_click = on_card_click.clone();
+                    view! {
+                        <ProjectCard item on_click />
+                    }
                 }).collect_view()}
             </div>
         </section>
