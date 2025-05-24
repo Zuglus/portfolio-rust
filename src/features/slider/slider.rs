@@ -14,6 +14,7 @@ enum SlideDirection {
 enum SliderState {
     Idle,
     Transitioning,
+    Loading,
 }
 
 #[component]
@@ -23,22 +24,34 @@ pub fn Slider(project: Project) -> impl IntoView {
     
     let (current_index, set_current_index) = create_signal(0);
     let (slider_state, set_slider_state) = create_signal(SliderState::Idle);
-    let (_slide_direction, set_slide_direction) = create_signal(SlideDirection::None);
+    let (slide_direction, set_slide_direction) = create_signal(SlideDirection::None);
     let (content_visible, set_content_visible) = create_signal(true);
     
-    // Предзагрузка смежных изображений для плавной работы
+    let image_key = move || {
+        format!("slide-{}-{}", current_index.get(), 
+            slides.get().get(current_index.get()).map(|s| s.image.as_str()).unwrap_or(""))
+    };
+    
     create_effect(move |_| {
         let current = current_index.get();
         let slides_vec = slides.get();
         
-        // Предзагружаем соседние слайды
-        if let Some(_next_slide) = slides_vec.get((current + 1) % total_slides) {
-            // Можно добавить предзагрузку через link rel="prefetch"
-            // Пока оставляем заглушку для будущей оптимизации
+        let next_index = if current < total_slides - 1 { current + 1 } else { 0 };
+        let prev_index = if current > 0 { current - 1 } else { total_slides - 1 };
+        
+        for &idx in &[next_index, prev_index] {
+            if let Some(slide) = slides_vec.get(idx) {
+                if let Some(document) = web_sys::window().unwrap().document() {
+                    if let Ok(link) = document.create_element("link") {
+                        let _ = link.set_attribute("rel", "prefetch");
+                        let _ = link.set_attribute("href", &slide.image);
+                        let _ = document.head().unwrap().append_child(&link);
+                    }
+                }
+            }
         }
     });
     
-    // Современная навигация с таймингом по Material Design
     let navigate = move |direction: String| {
         if slider_state.get() != SliderState::Idle { return; }
         
@@ -57,24 +70,19 @@ pub fn Slider(project: Project) -> impl IntoView {
         
         if new_index == current { return; }
         
-        // Запуск последовательности переходов
         set_slider_state.set(SliderState::Transitioning);
         set_slide_direction.set(nav_direction);
         
-        // Фаза 1: Скрытие контента (150ms)
         set_content_visible.set(false);
         
-        // Фаза 2: Смена слайда (задержка 50ms)
         set_timeout(
             move || {
                 set_current_index.set(new_index);
                 
-                // Фаза 3: Показ нового контента (задержка 200ms)
                 set_timeout(
                     move || {
                         set_content_visible.set(true);
                         
-                        // Фаза 4: Завершение перехода (задержка 300ms)
                         set_timeout(
                             move || {
                                 set_slider_state.set(SliderState::Idle);
@@ -90,7 +98,6 @@ pub fn Slider(project: Project) -> impl IntoView {
         );
     };
     
-    // Навигация клавиатурой
     let handle_keydown = move |e: KeyboardEvent| {
         match e.key().as_str() {
             "ArrowRight" => navigate("next".to_string()),
@@ -106,15 +113,15 @@ pub fn Slider(project: Project) -> impl IntoView {
     
     view! {
         <div class="w-full max-w-[93.75rem] mx-auto">
-            // Современное окно просмотра слайдов
             <div class="slide-viewport relative min-h-[400px] mb-6">
                 {move || {
                     let slides_vec = slides.get();
                     let idx = current_index.get();
+                    let key = image_key();
                     
                     if let Some(slide) = slides_vec.get(idx) {
                         view! {
-                            <div class="slide-item entered">
+                            <div class="slide-item entered" key=key.clone()>
                                 <div class="image-container overflow-hidden rounded-lg">
                                     <SliderImage
                                         src=slide.image.clone()
@@ -136,19 +143,17 @@ pub fn Slider(project: Project) -> impl IntoView {
                 }}
             </div>
             
-            // Современная навигация с state layer
             <div class="px-8 pb-8">
                 <NavigationButtons 
                     on_navigate=Callback::new(navigate)
                     disabled={slider_state.get() != SliderState::Idle}
                 />
 
-                // Контент с поэтапной анимацией
                 <div class=move || {
                     if content_visible.get() {
                         "slide-content space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     } else {
-                        "slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
+                        "slide-content slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     }
                 }>
                     {move || {

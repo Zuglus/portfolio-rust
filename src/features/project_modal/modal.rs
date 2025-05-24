@@ -100,20 +100,20 @@ pub fn ProjectModal(
                     </div>
                 </div>
 
-                // Современная кнопка закрытия с state layer
                 <button
                     on:click=move |_| handle_close()
-                    class="interactive-element nav-button absolute top-6 right-6 p-4 md:p-2 rounded-full 
+                    class="absolute top-6 right-6 p-4 md:p-2 rounded-full 
                            bg-black/40 backdrop-blur-sm 
                            hover:bg-black/60 
-                           focus-visible:outline-2 focus-visible:outline-white/50
+                           focus:outline-none focus:ring-2 focus:ring-white/50
                            z-50 group
+                           transition-all duration-300 ease-in-out
                            shadow-lg"
                     aria-label="Закрыть"
                 >
                     <svg
                         class="w-12 h-12 md:w-6 md:h-6 text-white/80 group-hover:text-white
-                             transition-colors duration-short2 ease-standard"
+                             transition-colors duration-300 ease-in-out"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
