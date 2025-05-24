@@ -14,6 +14,7 @@ enum SlideDirection {
 enum SliderState {
     Idle,
     Transitioning,
+    Loading,
 }
 
 #[component]
@@ -23,22 +24,28 @@ pub fn Slider(project: Project) -> impl IntoView {
     
     let (current_index, set_current_index) = create_signal(0);
     let (slider_state, set_slider_state) = create_signal(SliderState::Idle);
-    let (_slide_direction, set_slide_direction) = create_signal(SlideDirection::None);
+    let (slide_direction, set_slide_direction) = create_signal(SlideDirection::None);
     let (content_visible, set_content_visible) = create_signal(true);
     
-    // Предзагрузка смежных изображений для плавной работы
+    // Prefetch next/previous images for smooth experience
     create_effect(move |_| {
         let current = current_index.get();
         let slides_vec = slides.get();
         
-        // Предзагружаем соседние слайды
-        if let Some(_next_slide) = slides_vec.get((current + 1) % total_slides) {
-            // Можно добавить предзагрузку через link rel="prefetch"
-            // Пока оставляем заглушку для будущей оптимизации
+        // Preload adjacent slides
+        if let Some(next_slide) = slides_vec.get((current + 1) % total_slides) {
+            let _ = web_sys::window()
+                .unwrap()
+                .document()
+                .unwrap()
+                .create_element("link")
+                .unwrap()
+                .set_attribute("rel", "prefetch")
+                .unwrap();
         }
     });
     
-    // Современная навигация с таймингом по Material Design
+    // Modern navigation with timing based on Material Design
     let navigate = move |direction: String| {
         if slider_state.get() != SliderState::Idle { return; }
         
@@ -57,24 +64,24 @@ pub fn Slider(project: Project) -> impl IntoView {
         
         if new_index == current { return; }
         
-        // Запуск последовательности переходов
+        // Start transition sequence
         set_slider_state.set(SliderState::Transitioning);
         set_slide_direction.set(nav_direction);
         
-        // Фаза 1: Скрытие контента (150ms)
+        // Phase 1: Hide content (150ms)
         set_content_visible.set(false);
         
-        // Фаза 2: Смена слайда (задержка 50ms)
+        // Phase 2: Change slide (50ms delay)
         set_timeout(
             move || {
                 set_current_index.set(new_index);
                 
-                // Фаза 3: Показ нового контента (задержка 200ms)
+                // Phase 3: Show new content (200ms delay)
                 set_timeout(
                     move || {
                         set_content_visible.set(true);
                         
-                        // Фаза 4: Завершение перехода (задержка 300ms)
+                        // Phase 4: Complete transition (300ms delay)
                         set_timeout(
                             move || {
                                 set_slider_state.set(SliderState::Idle);
@@ -90,7 +97,7 @@ pub fn Slider(project: Project) -> impl IntoView {
         );
     };
     
-    // Навигация клавиатурой
+    // Keyboard navigation
     let handle_keydown = move |e: KeyboardEvent| {
         match e.key().as_str() {
             "ArrowRight" => navigate("next".to_string()),
@@ -106,7 +113,7 @@ pub fn Slider(project: Project) -> impl IntoView {
     
     view! {
         <div class="w-full max-w-[93.75rem] mx-auto">
-            // Современное окно просмотра слайдов
+            // Modern slide viewport
             <div class="slide-viewport relative min-h-[400px] mb-6">
                 {move || {
                     let slides_vec = slides.get();
@@ -136,19 +143,19 @@ pub fn Slider(project: Project) -> impl IntoView {
                 }}
             </div>
             
-            // Современная навигация с state layer
+            // Modern navigation with state layer
             <div class="px-8 pb-8">
                 <NavigationButtons 
                     on_navigate=Callback::new(navigate)
                     disabled={slider_state.get() != SliderState::Idle}
                 />
 
-                // Контент с поэтапной анимацией
+                // Content with staggered animation
                 <div class=move || {
                     if content_visible.get() {
                         "slide-content space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     } else {
-                        "slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
+                        "slide-content slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     }
                 }>
                     {move || {

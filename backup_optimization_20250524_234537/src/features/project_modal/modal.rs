@@ -7,6 +7,7 @@ use crate::shared::types::Project;
 
 #[derive(Clone, Copy, PartialEq)]
 enum ModalState {
+    Hidden,
     Entering,
     Visible,
     Exiting,
@@ -20,7 +21,7 @@ pub fn ProjectModal(
     let modal_ref = create_node_ref::<Div>();
     let (modal_state, set_modal_state) = create_signal(ModalState::Entering);
     
-    // Плавное открытие с задержкой
+    // Плавное открытие
     create_effect(move |_| {
         if modal_state.get() == ModalState::Entering {
             set_timeout(
@@ -69,8 +70,9 @@ pub fn ProjectModal(
     let backdrop_class = move || {
         match modal_state.get() {
             ModalState::Entering => "modal-backdrop fixed inset-0 z-50 flex items-center justify-center",
-            ModalState::Visible => "modal-backdrop enter-active fixed inset-0 z-50 flex items-center justify-center",
-            ModalState::Exiting => "modal-backdrop exit-active fixed inset-0 z-50 flex items-center justify-center",
+            ModalState::Visible => "modal-backdrop modal-backdrop enter-active fixed inset-0 z-50 flex items-center justify-center",
+            ModalState::Exiting => "modal-backdrop modal-backdrop exit-active fixed inset-0 z-50 flex items-center justify-center",
+            ModalState::Hidden => "modal-backdrop fixed inset-0 z-50 flex items-center justify-center opacity-0",
         }
     };
     
@@ -80,6 +82,7 @@ pub fn ProjectModal(
             ModalState::Entering => format!("{} enter", base),
             ModalState::Visible => format!("{} enter-active", base),
             ModalState::Exiting => format!("{} exit-active", base),
+            ModalState::Hidden => format!("{} opacity-0", base),
         }
     };
     
