@@ -4,22 +4,22 @@ pub fn get_portfolio_mock_data() -> Vec<PortfolioItem> {
     vec![
         PortfolioItem {
             id: "project1".to_string(),
-            image: "/mock-project1.jpg".to_string(),
+            image: "/assets/images/threads.png".to_string(),
             alt: "НИТИ".to_string(),
         },
         PortfolioItem {
             id: "project2".to_string(),
-            image: "/mock-project2.jpg".to_string(),
+            image: "/assets/images/code.png".to_string(),
             alt: "КОДИИМ".to_string(),
         },
         PortfolioItem {
             id: "project3".to_string(),
-            image: "/mock-project3.jpg".to_string(),
+            image: "/assets/images/day.png".to_string(),
             alt: "День физики".to_string(),
         },
         PortfolioItem {
             id: "project4".to_string(),
-            image: "/mock-project4.jpg".to_string(),
+            image: "/assets/images/presentation.png".to_string(),
             alt: "Дизайн презентаций".to_string(),
         },
     ]
@@ -37,7 +37,7 @@ pub fn get_experience_mock_data() -> Vec<Experience> {
                 "Презентации".to_string(),
                 "Полиграфия".to_string(),
             ],
-            circle_image: Some("/mock-circle.png".to_string()),
+            circle_image: Some("/assets/images/kruzhok_opyt_raboty.svg".to_string()),
         },
         Experience {
             year: "2021-2022".to_string(),

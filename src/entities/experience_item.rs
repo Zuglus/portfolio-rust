@@ -6,11 +6,9 @@ pub fn ExperienceItem(experience: Experience) -> impl IntoView {
     view! {
         <div class="ml-[30.1025rem] md:ml-[31.875rem] mb-[7.21875rem] md:mb-[4.8125rem]">
             <div class="relative">
-                {experience.circle_image.map(|_| view! {
+                {experience.circle_image.map(|img| view! {
                     <div class="absolute -top-[1.40625rem] md:-top-[0.9375rem] -left-[12.375rem] md:-left-[8.25rem] w-[7.875rem] md:w-[5.25rem] h-[7.875rem] md:h-[5.25rem]">
-                        <div class="w-full h-full bg-secondary/20 rounded-full flex items-center justify-center">
-                            <span class="text-secondary text-xs">"●"</span>
-                        </div>
+                        <img src=img alt="" class="w-full h-full object-contain" />
                     </div>
                 })}
                 

@@ -7,7 +7,7 @@ pub fn Footer() -> impl IntoView {
     view! {
         <footer class="relative mt-[12.375rem] md:mt-[9.75rem] pb-[30.9375rem] md:pb-[20.625rem]">
             <div class="absolute -top-96 left-1/2 w-[56rem] md:w-[40rem] -translate-x-[36rem] md:-translate-x-[24.5rem] -translate-y-[13rem] md:-translate-y-[3rem] overflow-hidden">
-                <div class="w-full h-[400px] bg-secondary/10 rounded-full opacity-30"></div>
+                <img src="/assets/images/koltsa_fon1.svg" alt="" class="w-full h-full object-contain" />
             </div>
             
             <div class="mx-auto px-4 max-w-[75rem] relative">

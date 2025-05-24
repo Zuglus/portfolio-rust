@@ -10,7 +10,11 @@ pub fn PortfolioSection() -> impl IntoView {
         <section class="relative mx-auto px-4 py-[7.75rem] max-w-[75rem]">
             <div class="relative mb-[4.1875rem] text-center z-0">
                 <div class="absolute top-[-2.875rem] md:top-[-1.875rem] left-[50%] w-[25.875rem] md:w-[17.25rem] h-[28.0125rem] md:h-[18.675rem] transform -translate-x-[20.6rem] md:-translate-x-[13.625rem] z-0">
-                    <div class="w-full h-full bg-secondary/10 rounded-full opacity-20"></div>
+                    <img 
+                        src="/assets/images/rings_with_circle.svg" 
+                        alt="Декоративные кольца" 
+                        class="w-full h-full object-contain"
+                    />
                 </div>
                 <h2 class="font-mv-skifer text-[4.6875rem] md:text-[3.125rem] leading-[1.24] tracking-[0.01em] relative z-10">
                     "Портфолио"

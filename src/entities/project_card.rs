@@ -5,12 +5,11 @@ use crate::shared::types::PortfolioItem;
 pub fn ProjectCard(item: PortfolioItem) -> impl IntoView {
     view! {
         <div class="bg-white/5 hover:shadow-lg rounded-[1.875rem] md:rounded-[1.25rem] transition-all hover:-translate-y-2 duration-300 cursor-pointer overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 group">
-            <div class="w-full h-64 bg-secondary/20 flex items-center justify-center group-hover:bg-secondary/30 transition-colors">
-                <div class="text-center text-white/80">
-                    <div class="text-xl font-mv-skifer mb-2">{&item.alt}</div>
-                    <div class="text-sm font-onest opacity-60">"Заглушка изображения"</div>
-                </div>
-            </div>
+            <img 
+                src=&item.image
+                alt=&item.alt
+                class="group-hover:scale-105 w-full transition-transform duration-300 object-cover"
+            />
         </div>
     }
 }

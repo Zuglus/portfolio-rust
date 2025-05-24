@@ -2,19 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Временные заглушки для шрифтов - будут заменены на этапе 4 */
 @font-face {
   font-family: 'MV-SKIFER';
-  src: local('Arial Black');
+  src: url('/assets/fonts/MV-SKIFER.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Onest';
-  src: local('Arial');
-  font-weight: 100 900;
+  src: url('/assets/fonts/Onest-Regular.ttf') format('truetype');
+  font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Onest';
+  src: url('/assets/fonts/Onest-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Onest';
+  src: url('/assets/fonts/Onest-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }
 
 :root {
@@ -26,7 +43,6 @@ html {
   background-color: #04061B;
 }
 
-/* Сохраняем стили из оригинального проекта */
 .modal-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #3624A6 transparent;

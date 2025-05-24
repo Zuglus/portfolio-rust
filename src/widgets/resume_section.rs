@@ -8,12 +8,12 @@ pub fn ResumeSection() -> impl IntoView {
     view! {
         <section class="relative mx-auto px-4 py-[3.75rem] max-w-[75rem]">
             <div class="absolute left-1/2 top-[40.5rem] md:top-[27rem] w-[48.78125rem] overflow-hidden -translate-x-[16rem] md:-translate-x-[16rem]">
-                <div class="w-full h-[400px] bg-secondary/5 rounded-full opacity-30"></div>
+                <img src="/assets/images/portfolio.svg" alt="" class="w-full h-full object-contain" />
             </div>
             
             <div class="relative mb-[1.25rem] text-center">
                 <div class="absolute top-[-2.875rem] md:top-[-1.875rem] left-[50%] w-[25.875rem] md:w-[17.25rem] h-[28.0125rem] md:h-[18.675rem] transform -translate-x-[14.7rem] md:-translate-x-[9.8rem]">
-                    <div class="w-full h-full bg-secondary/10 rounded-full opacity-20"></div>
+                    <img src="/assets/images/rings_with_circle.svg" alt="Декоративные кольца" class="w-full h-full object-contain" />
                 </div>
                 <h2 class="font-mv-skifer text-[4.6875rem] md:text-[3.125rem] leading-[1.24] tracking-[0.01em] relative">
                     "Резюме"
@@ -21,8 +21,8 @@ pub fn ResumeSection() -> impl IntoView {
             </div>
 
             <div class="flex justify-center items-center gap-[1.875rem] md:gap-[1.25rem] mb-[1.25rem]">
-                <div class="rounded-full w-[16.6875rem] md:w-[11.125rem] h-[17.25rem] md:h-[11.55rem] bg-secondary/20 flex items-center justify-center">
-                    <span class="text-4xl text-secondary font-mv-skifer">"ПМ"</span>
+                <div class="rounded-full w-[16.6875rem] md:w-[11.125rem] h-[17.25rem] md:h-[11.55rem]">
+                    <img src="/assets/images/foto.png" alt="Полина Мигранова" class="relative w-full h-full object-cover rounded-full" />
                 </div>
                 <h3 class="font-mv-skifer text-[4.6875rem] md:text-[3.125rem] leading-[1.05] tracking-[0.01em]">
                     "Полина" <br/> "Мигранова"

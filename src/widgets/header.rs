@@ -7,9 +7,11 @@ pub fn Header() -> impl IntoView {
             <div class="flex justify-center items-center">
                 <div class="flex items-center gap-[2rem]">
                     <div class="h-[12rem] md:h-[8rem] w-auto">
-                        <div class="w-[12rem] md:w-[8rem] h-[12rem] md:h-[8rem] bg-secondary/20 rounded-full flex items-center justify-center">
-                            <span class="text-2xl font-mv-skifer text-secondary">"П"</span>
-                        </div>
+                        <img 
+                            src="/assets/images/logo.svg" 
+                            alt="Логотип Полина Мигранова" 
+                            class="w-full h-full object-contain"
+                        />
                     </div>
                     
                     <div class="flex flex-col text-left whitespace-nowrap">
