@@ -8,15 +8,6 @@ pub struct PortfolioItem {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct Experience {
-    pub year: String,
-    pub company: String,
-    pub position: String,
-    pub duties: Vec<String>,
-    pub circle_image: Option<String>,
-}
-
-#[derive(Clone, Debug, PartialEq)]
 pub struct Project {
     pub id: Id,
     pub title: String,

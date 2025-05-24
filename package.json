@@ -12,5 +12,8 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17"
+  },
+  "overrides": {
+    "caniuse-lite": "1.0.30001718"
   }
 }

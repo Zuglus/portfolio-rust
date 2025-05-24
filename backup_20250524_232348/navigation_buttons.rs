@@ -5,9 +5,9 @@ pub fn NavigationButtons(
     on_navigate: Callback<String>,
     disabled: bool,
 ) -> impl IntoView {
-    let base_button_style = "nav-button border transition-all duration-300 rounded-full flex items-center justify-center text-7xl w-[5rem] h-[5rem] border-white/20 md:w-[3rem] md:h-[3rem] md:text-5xl";
+    let base_button_style = "border transition-all duration-300 rounded-full flex items-center justify-center text-7xl w-[5rem] h-[5rem] border-white/20 md:w-[3rem] md:h-[3rem] md:text-5xl";
     
-    let enabled_styles = "hover:bg-white hover:text-[#3624A6] cursor-pointer";
+    let enabled_styles = "hover:bg-white hover:text-[#3624A6] cursor-pointer active:scale-95 transform";
     let disabled_styles = "opacity-50 cursor-not-allowed";
     
     let button_class = if disabled {

@@ -74,3 +74,243 @@ body.modal-open {
   position: fixed;
   width: 100%;
 }
+
+/* ============ АНИМАЦИИ МОДАЛЬНОГО ОКНА ============ */
+
+/* Анимация фона модального окна */
+@keyframes modal-backdrop-enter {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+@keyframes modal-backdrop-exit {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+/* Анимация появления модального окна */
+@keyframes modal-content-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-content-exit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+}
+
+/* Классы для анимации модального окна */
+.modal-backdrop-enter {
+  animation: modal-backdrop-enter 0.3s ease-out forwards;
+}
+
+.modal-backdrop-exit {
+  animation: modal-backdrop-exit 0.2s ease-in forwards;
+}
+
+.modal-content-enter {
+  animation: modal-content-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.modal-content-exit {
+  animation: modal-content-exit 0.2s ease-in forwards;
+}
+
+/* ============ АНИМАЦИИ СЛАЙДЕРА ============ */
+
+/* Контейнер для слайдов */
+.slider-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Базовые стили для слайдов */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Активный слайд */
+.slide-active {
+  position: relative;
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+}
+
+/* Слайд уходящий влево */
+.slide-exit-left {
+  opacity: 0;
+  transform: translateX(-100%);
+  z-index: 1;
+}
+
+/* Слайд приходящий справа */
+.slide-enter-right {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+}
+
+/* Слайд уходящий вправо */
+.slide-exit-right {
+  opacity: 0;
+  transform: translateX(100%);
+  z-index: 1;
+}
+
+/* Слайд приходящий слева */
+.slide-enter-left {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+}
+
+/* Анимация для изображений в слайдах */
+.slide-image {
+  transition: all 0.4s ease-out;
+  transform: scale(1);
+}
+
+.slide-image-loading {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+.slide-image-loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Анимация для контента слайда */
+.slide-content {
+  transition: all 0.3s ease-out 0.1s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-content-hidden {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ============ АНИМАЦИИ КНОПОК ============ */
+
+/* Анимация кнопок навигации */
+.nav-button {
+  transition: all 0.2s ease-out;
+  transform: scale(1);
+}
+
+.nav-button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.nav-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.nav-button:disabled {
+  transition: all 0.3s ease-out;
+}
+
+/* ============ АНИМАЦИИ ЗАГРУЗКИ ============ */
+
+/* Пульсация для загрузки */
+@keyframes loading-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+.loading-pulse {
+  animation: loading-pulse 2s ease-in-out infinite;
+}
+
+/* Скелетон анимация */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.03) 25%, 
+    rgba(255, 255, 255, 0.08) 50%, 
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+/* ============ ОБЩИЕ УТИЛИТЫ ============ */
+
+/* Плавные переходы */
+.smooth-transition {
+  transition: all 0.3s ease-out;
+}
+
+.smooth-transition-fast {
+  transition: all 0.15s ease-out;
+}
+
+.smooth-transition-slow {
+  transition: all 0.5s ease-out;
+}
+
+/* Состояния видимости */
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.2s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

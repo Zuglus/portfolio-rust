@@ -2,8 +2,6 @@ use leptos::*;
 use crate::widgets::header::Header;
 use crate::widgets::footer::Footer;
 use crate::widgets::portfolio_section::PortfolioSection;
-use crate::widgets::resume_section::ResumeSection;
-use crate::widgets::experience_section::ExperienceSection;
 use crate::features::project_modal::ProjectModal;
 use crate::shared::data::get_project_by_id;
 
@@ -21,8 +19,6 @@ pub fn HomePage() -> impl IntoView {
             
             <main>
                 <PortfolioSection on_card_click />
-                <ResumeSection />
-                <ExperienceSection />
             </main>
             
             <Footer />
