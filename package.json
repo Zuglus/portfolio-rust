@@ -1,19 +1,38 @@
 {
   "name": "portfolio-rust",
   "version": "0.1.0",
-  "description": "Портфолио Полины Миграновой на Rust/Leptos",
+  "description": "Портфолио Полины Миграновой на Rust/Leptos с современными оптимизациями",
   "scripts": {
     "setup": "bash scripts/setup.sh",
     "dev": "bash scripts/dev.sh",
     "build": "bash scripts/build.sh",
     "test": "bash scripts/test.sh",
     "css:watch": "tailwindcss -i ./style/main.scss -o ./style/output.css --watch",
-    "css:build": "tailwindcss -i ./style/main.scss -o ./style/output.css --minify"
+    "css:build": "tailwindcss -i ./style/main.scss -o ./style/output.css --minify",
+    "update-browsers": "npx update-browserslist-db@latest",
+    "analyze": "du -sh dist && find dist -type f -name '*.wasm' -o -name '*.css' -o -name '*.js' | xargs ls -lh",
+    "optimize": "npm run update-browsers && npm run css:build"
   },
   "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "autoprefixer": "^10.4.21",
+    "cssnano": "^7.0.7",
     "tailwindcss": "^3.4.17"
   },
-  "overrides": {
-    "caniuse-lite": "1.0.30001718"
-  }
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not op_mini all"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "rust",
+    "leptos",
+    "wasm",
+    "portfolio",
+    "tailwindcss",
+    "modern-web"
+  ]
 }

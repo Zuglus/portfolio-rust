@@ -1,0 +1,19 @@
+{
+  "name": "portfolio-rust",
+  "version": "0.1.0",
+  "description": "Портфолио Полины Миграновой на Rust/Leptos",
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "dev": "bash scripts/dev.sh",
+    "build": "bash scripts/build.sh",
+    "test": "bash scripts/test.sh",
+    "css:watch": "tailwindcss -i ./style/main.scss -o ./style/output.css --watch",
+    "css:build": "tailwindcss -i ./style/main.scss -o ./style/output.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "overrides": {
+    "caniuse-lite": "1.0.30001718"
+  }
+}

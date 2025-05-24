@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{rs,html}",
+    "./public/**/*.html",
   ],
   theme: {
     extend: {
@@ -13,8 +14,12 @@ module.exports = {
       colors: {
         primary: '#04061B',
         secondary: '#3624A6',
+        surface: {
+          50: 'rgba(255, 255, 255, 0.05)',
+          100: 'rgba(255, 255, 255, 0.1)',
+          200: 'rgba(255, 255, 255, 0.2)',
+        }
       },
-      /* Modern Animation System */
       transitionDuration: {
         'short1': '50ms',
         'short2': '100ms',
@@ -44,6 +49,7 @@ module.exports = {
         'slide-up': 'slideUp 300ms cubic-bezier(0.05, 0.7, 0.1, 1)',
         'slide-down': 'slideDown 300ms cubic-bezier(0.05, 0.7, 0.1, 1)',
         'scale-in': 'scaleIn 250ms cubic-bezier(0.05, 0.7, 0.1, 1)',
+        'bounce-in': 'bounceIn 400ms cubic-bezier(0.05, 0.7, 0.1, 1)',
       },
       keyframes: {
         shimmer: {
@@ -66,8 +72,27 @@ module.exports = {
           '0%': { transform: 'scale(0.94)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
+        bounceIn: {
+          '0%': { transform: 'scale(0.3)', opacity: '0' },
+          '50%': { transform: 'scale(1.05)' },
+          '70%': { transform: 'scale(0.9)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Добавляем плагины если они установлены
+  ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
 };

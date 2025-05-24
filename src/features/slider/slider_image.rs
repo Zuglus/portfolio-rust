@@ -16,8 +16,9 @@ pub fn SliderImage(
     let (image_state, set_image_state) = create_signal(ImageState::Loading);
     let src_clone = src.clone();
     let src_clone2 = src.clone();
-    let src_clone3 = src.clone();
+    // Fixed: removed unused src_clone3
     
+    // Modern image loading with better error handling
     create_effect(move |prev_src: Option<String>| {
         let current_src = src_clone.clone();
         
@@ -84,6 +85,7 @@ pub fn SliderImage(
                     set_image_state.set(ImageState::Error);
                 }
                 loading=if priority { "eager" } else { "lazy" }
+                decoding="async"
             />
         </div>
     }

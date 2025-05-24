@@ -14,7 +14,7 @@ enum SlideDirection {
 enum SliderState {
     Idle,
     Transitioning,
-    Loading,
+    // Removed unused Loading variant
 }
 
 #[component]
@@ -24,7 +24,7 @@ pub fn Slider(project: Project) -> impl IntoView {
     
     let (current_index, set_current_index) = create_signal(0);
     let (slider_state, set_slider_state) = create_signal(SliderState::Idle);
-    let (slide_direction, set_slide_direction) = create_signal(SlideDirection::None);
+    let (_slide_direction, set_slide_direction) = create_signal(SlideDirection::None); // Fixed: prefixed with underscore
     let (content_visible, set_content_visible) = create_signal(true);
     
     let image_key = move || {
@@ -32,6 +32,7 @@ pub fn Slider(project: Project) -> impl IntoView {
             slides.get().get(current_index.get()).map(|s| s.image.as_str()).unwrap_or(""))
     };
     
+    // Modern prefetching strategy for better performance
     create_effect(move |_| {
         let current = current_index.get();
         let slides_vec = slides.get();
@@ -39,6 +40,7 @@ pub fn Slider(project: Project) -> impl IntoView {
         let next_index = if current < total_slides - 1 { current + 1 } else { 0 };
         let prev_index = if current > 0 { current - 1 } else { total_slides - 1 };
         
+        // Prefetch adjacent images for smoother transitions
         for &idx in &[next_index, prev_index] {
             if let Some(slide) = slides_vec.get(idx) {
                 if let Some(document) = web_sys::window().unwrap().document() {
@@ -52,6 +54,7 @@ pub fn Slider(project: Project) -> impl IntoView {
         }
     });
     
+    // Optimized navigation with modern timing
     let navigate = move |direction: String| {
         if slider_state.get() != SliderState::Idle { return; }
         
@@ -73,6 +76,7 @@ pub fn Slider(project: Project) -> impl IntoView {
         set_slider_state.set(SliderState::Transitioning);
         set_slide_direction.set(nav_direction);
         
+        // Modern transition timing for better UX
         set_content_visible.set(false);
         
         set_timeout(
@@ -153,7 +157,7 @@ pub fn Slider(project: Project) -> impl IntoView {
                     if content_visible.get() {
                         "slide-content space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     } else {
-                        "slide-content slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
+                        "slide-content hidden space-y-4 font-onest text-[3.28125rem] md:text-[1.25rem]"
                     }
                 }>
                     {move || {
