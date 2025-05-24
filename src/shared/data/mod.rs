@@ -1,57 +1,10 @@
-use crate::shared::types::{PortfolioItem, Experience};
+pub mod portfolio;
+pub mod projects;
+pub mod experience;
 
-pub fn get_portfolio_mock_data() -> Vec<PortfolioItem> {
-    vec![
-        PortfolioItem {
-            id: "project1".to_string(),
-            image: "/assets/images/threads.png".to_string(),
-            alt: "НИТИ".to_string(),
-        },
-        PortfolioItem {
-            id: "project2".to_string(),
-            image: "/assets/images/code.png".to_string(),
-            alt: "КОДИИМ".to_string(),
-        },
-        PortfolioItem {
-            id: "project3".to_string(),
-            image: "/assets/images/day.png".to_string(),
-            alt: "День физики".to_string(),
-        },
-        PortfolioItem {
-            id: "project4".to_string(),
-            image: "/assets/images/presentation.png".to_string(),
-            alt: "Дизайн презентаций".to_string(),
-        },
-    ]
-}
-
-pub fn get_experience_mock_data() -> Vec<Experience> {
-    vec![
-        Experience {
-            year: "2023-2024".to_string(),
-            company: "Центр Педагогического Мастерства".to_string(),
-            position: "Графический дизайнер".to_string(),
-            duties: vec![
-                "Фирменный стиль".to_string(),
-                "SMM-дизайн (соцсети)".to_string(),
-                "Презентации".to_string(),
-                "Полиграфия".to_string(),
-            ],
-            circle_image: Some("/assets/images/kruzhok_opyt_raboty.svg".to_string()),
-        },
-        Experience {
-            year: "2021-2022".to_string(),
-            company: "Банк УБРиР".to_string(),
-            position: "Ведущий дизайнер отдела коммуникаций".to_string(),
-            duties: vec![
-                "Презентации".to_string(),
-                "Коммуникационный дизайн".to_string(),
-                "Полиграфия".to_string(),
-            ],
-            circle_image: None,
-        },
-    ]
-}
+pub use portfolio::get_portfolio_data;
+pub use projects::{get_projects_data, get_project_by_id};
+pub use experience::get_experience_data;
 
 pub fn get_skills_data() -> (Vec<String>, Vec<String>) {
     let hard_skills = vec![

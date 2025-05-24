@@ -1,10 +1,10 @@
 use leptos::*;
 use crate::entities::project_card::ProjectCard;
-use crate::shared::data::get_portfolio_mock_data;
+use crate::shared::data::get_portfolio_data;
 
 #[component]
 pub fn PortfolioSection() -> impl IntoView {
-    let portfolio_data = get_portfolio_mock_data();
+    let portfolio_data = get_portfolio_data();
     
     view! {
         <section class="relative mx-auto px-4 py-[7.75rem] max-w-[75rem]">
